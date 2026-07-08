@@ -1,0 +1,1187 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>13款热门车型对比 - 2026年7月</title>
+<!--
+  图片替换指南：
+  每款车的图片URL存储在 cars 数组的 imgExterior 和 imgInterior 字段中。
+  搜索“<车型名> 工信部申报图”即可在汽车之家/易车等网站找到标准证件照。
+  将图片URL替换到对应字段即可。建议使用绝对URL或同目录下的图片文件。
+  工信部申报图特点：白色/浅灰背景，正前、正侧、正后三个角度，图片质量统一。
+-->
+<style>
+:root {
+  --bg: #f3f4f6;
+  --card-bg: #fff;
+  --text: #111827;
+  --text-secondary: #6b7280;
+  --border: #e5e7eb;
+  --accent: #2563eb;
+  --accent-dark: #1d4ed8;
+  --accent-light: #eff6ff;
+  --tag-bg: #f3f4f6;
+  --pro-bg: #ecfdf5;
+  --pro-text: #065f46;
+  --pro-border: #a7f3d0;
+  --con-bg: #fef2f2;
+  --con-text: #991b1b;
+  --con-border: #fecaca;
+  --price-color: #dc2626;
+  --shadow: 0 1px 3px rgba(0,0,0,.06), 0 1px 2px rgba(0,0,0,.04);
+  --shadow-hover: 0 4px 16px rgba(0,0,0,.1);
+  --radius: 14px;
+  --radius-sm: 8px;
+}
+* { margin:0; padding:0; box-sizing:border-box; }
+html { scroll-behavior: smooth; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  -webkit-tap-highlight-color: transparent;
+}
+.container { max-width:1340px; margin:0 auto; padding:16px; }
+
+/* Header */
+.header {
+  text-align: center;
+  padding: 36px 0 8px;
+}
+.header h1 {
+  font-size: clamp(22px, 5vw, 34px);
+  font-weight: 800;
+  letter-spacing: -1px;
+  background: linear-gradient(135deg, #1e293b 0%, #3b82f6 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+.header .subtitle {
+  color: var(--text-secondary);
+  margin-top: 8px;
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+.header .subtitle span { white-space: nowrap; }
+
+/* Stats bar */
+.stats-bar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  justify-content: center;
+  margin: 18px 0 8px;
+}
+.stat-item {
+  background: var(--card-bg);
+  border-radius: 20px;
+  padding: 6px 16px;
+  font-size: 12px;
+  color: var(--text-secondary);
+  box-shadow: var(--shadow);
+  white-space: nowrap;
+}
+.stat-item strong { color: var(--text); }
+
+/* Filter bar */
+.filter-bar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  justify-content: center;
+  margin: 20px 0 24px;
+  position: sticky;
+  top: 8px;
+  z-index: 100;
+  background: rgba(243,244,246,.85);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  padding: 10px;
+  border-radius: 24px;
+}
+.filter-btn {
+  padding: 8px 18px;
+  border: 1px solid var(--border);
+  background: var(--card-bg);
+  border-radius: 20px;
+  cursor: pointer;
+  font-size: 13px;
+  color: var(--text-secondary);
+  transition: all .2s;
+  white-space: nowrap;
+  font-weight: 500;
+}
+.filter-btn:hover { border-color: var(--accent); color: var(--accent); background: var(--accent-light); }
+.filter-btn.active { background: var(--accent); color: #fff; border-color: var(--accent); font-weight: 600; }
+
+/* Section title */
+.section-title {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 32px 0 16px;
+  font-size: 20px;
+  font-weight: 700;
+}
+.section-title::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--border);
+}
+
+/* Card Grid */
+.card-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(370px, 1fr));
+  gap: 20px;
+}
+
+/* Card */
+.card {
+  background: var(--card-bg);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  overflow: hidden;
+  transition: box-shadow .25s, transform .2s;
+  display: flex;
+  flex-direction: column;
+  border: 1px solid var(--border);
+}
+.card:hover { box-shadow: var(--shadow-hover); transform: translateY(-2px); }
+
+/* Image area - dual: exterior + interior */
+.card-images {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2px;
+  height: 180px;
+  background: #e5e7eb;
+}
+.card-img {
+  background: linear-gradient(145deg, #e0e7ff 0%, #c7d2fe 40%, #ddd6fe 100%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
+  cursor: default;
+}
+.card-img.interior {
+  background: linear-gradient(145deg, #fef3c7 0%, #fde68a 40%, #fcd34d 100%);
+}
+.card-img .img-label {
+  position: absolute;
+  top: 8px;
+  left: 8px;
+  font-size: 10px;
+  font-weight: 600;
+  padding: 2px 8px;
+  border-radius: 4px;
+  background: rgba(0,0,0,.35);
+  color: #fff;
+  z-index: 2;
+}
+.card-img .img-overlay {
+  font-size: 13px;
+  color: rgba(255,255,255,.85);
+  font-weight: 700;
+  text-align: center;
+  padding: 8px;
+  z-index: 1;
+  text-shadow: 0 1px 3px rgba(0,0,0,.4);
+}
+.card-img img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+/* Card body */
+.card-body { padding: 16px 18px 18px; flex:1; display:flex; flex-direction:column; }
+
+.card-meta {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+  margin-bottom: 4px;
+  flex-wrap: wrap;
+}
+.type-badge {
+  display: inline-block;
+  padding: 3px 10px;
+  border-radius: 12px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: .3px;
+}
+.type-phev { background: #dbeafe; color: #1e40af; }
+.type-ev { background: #dcfce7; color: #166534; }
+.type-ice { background: #fff7ed; color: #9a3412; }
+.type-hev { background: #f3e8ff; color: #6b21a8; }
+
+.body-badge {
+  font-size: 11px;
+  color: #9ca3af;
+  font-weight: 500;
+}
+
+.card-title {
+  font-size: 19px;
+  font-weight: 800;
+  margin: 2px 0 0;
+  letter-spacing: -.3px;
+}
+.card-subtitle {
+  font-size: 12px;
+  color: var(--text-secondary);
+  margin-bottom: 12px;
+}
+
+/* Price */
+.price-row {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  margin-bottom: 14px;
+  flex-wrap: wrap;
+}
+.price-tag {
+  display: inline-flex;
+  align-items: baseline;
+  background: #fef2f2;
+  color: var(--price-color);
+  padding: 5px 12px;
+  border-radius: 6px;
+  font-weight: 700;
+  font-size: 16px;
+  border: 1px solid #fecaca;
+}
+.price-tag .unit { font-size: 12px; font-weight: 400; margin-right: 2px; }
+.price-note { font-size: 11px; color: #9ca3af; }
+
+/* Spec badges */
+.spec-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 7px;
+  margin-bottom: 14px;
+}
+.spec-badge {
+  background: #f9fafb;
+  padding: 5px 10px;
+  border-radius: 6px;
+  font-size: 11.5px;
+  color: var(--text-secondary);
+  white-space: nowrap;
+  border: 1px solid #f3f4f6;
+}
+.spec-badge strong { color: var(--text); font-weight: 600; }
+
+/* Pros/cons toggle */
+.toggle-section { margin-top: auto; }
+.toggle-header {
+  display: flex;
+  gap: 10px;
+  border-top: 1px solid var(--border);
+  padding-top: 12px;
+}
+.toggle-tab {
+  flex: 1;
+  text-align: center;
+  padding: 7px 0;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 12.5px;
+  font-weight: 600;
+  transition: all .2s;
+  user-select: none;
+  -webkit-user-select: none;
+}
+.toggle-tab:hover { opacity: .8; }
+.toggle-tab.tab-pro { background: var(--pro-bg); color: var(--pro-text); border: 1px solid var(--pro-border); }
+.toggle-tab.tab-con { background: var(--con-bg); color: var(--con-text); border: 1px solid var(--con-border); }
+.toggle-tab.tab-inactive { background: transparent; color: #9ca3af; border: 1px solid transparent; }
+.toggle-content {
+  margin-top: 10px;
+  font-size: 12.5px;
+  line-height: 1.7;
+  display: none;
+  animation: fadeIn .2s;
+}
+.toggle-content.show { display: block; }
+.toggle-content ul { padding-left: 18px; }
+.toggle-content li { margin-bottom: 3px; color: #4b5563; }
+@keyframes fadeIn { from { opacity: 0; transform: translateY(-4px); } to { opacity: 1; transform: translateY(0); } }
+
+/* No results */
+.no-results {
+  text-align: center;
+  padding: 48px 0;
+  color: var(--text-secondary);
+  grid-column: 1 / -1;
+}
+.no-results .icon { font-size: 48px; margin-bottom: 12px; }
+
+/* === COMPARISON TABLE === */
+.table-section {
+  margin-top: 44px;
+}
+.table-section h2 {
+  font-size: 20px;
+  font-weight: 700;
+  margin-bottom: 6px;
+  text-align: center;
+}
+.table-section .table-note {
+  text-align: center;
+  font-size: 12px;
+  color: var(--text-secondary);
+  margin-bottom: 16px;
+}
+.table-wrap {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  background: var(--card-bg);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  border: 1px solid var(--border);
+}
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 12.5px;
+  min-width: 1200px;
+}
+thead th {
+  background: #f8fafc;
+  padding: 12px 8px;
+  text-align: left;
+  font-weight: 700;
+  font-size: 11.5px;
+  color: var(--text-secondary);
+  border-bottom: 2px solid #d1d5db;
+  position: sticky;
+  top: 0;
+  z-index: 3;
+  white-space: nowrap;
+  text-align: center;
+}
+thead th:first-child {
+  position: sticky;
+  left: 0;
+  z-index: 4;
+  background: #f1f5f9;
+  min-width: 130px;
+  text-align: left;
+}
+tbody td {
+  padding: 9px 8px;
+  border-bottom: 1px solid #f3f4f6;
+  vertical-align: middle;
+  text-align: center;
+}
+tbody td:first-child {
+  font-weight: 600;
+  white-space: nowrap;
+  position: sticky;
+  left: 0;
+  background: var(--card-bg);
+  z-index: 2;
+  text-align: left;
+  color: var(--text-secondary);
+  font-size: 12px;
+}
+tbody tr:hover td { background: #fafbfc; }
+tbody tr:hover td:first-child { background: #fafbfc; }
+.car-col-header {
+  font-weight: 700;
+  font-size: 13px;
+  white-space: nowrap;
+  display: block;
+}
+.car-col-trim {
+  font-size: 10.5px;
+  color: #9ca3af;
+  white-space: nowrap;
+  display: block;
+}
+.car-col-price {
+  color: var(--price-color);
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+/* Footer */
+.footer {
+  text-align: center;
+  padding: 36px 16px;
+  color: #9ca3af;
+  font-size: 12px;
+  line-height: 1.8;
+}
+.footer a { color: var(--accent); text-decoration: none; }
+
+/* Print styles */
+@media print {
+  body { background: #fff; }
+  .filter-bar, .stats-bar, .footer, .section-anchor { display: none; }
+  .card { break-inside: avoid; box-shadow: none; border: 1px solid #ddd; }
+  .card-grid { grid-template-columns: repeat(2, 1fr); gap: 12px; }
+  .card-images { height: 140px; }
+  .header { padding: 10px 0; }
+}
+
+/* Mobile */
+@media (max-width: 768px) {
+  .card-grid { grid-template-columns: 1fr; }
+  .card-images { height: 200px; }
+  .filter-bar { gap: 5px; }
+  .filter-btn { padding: 6px 12px; font-size: 12px; }
+  .header h1 { font-size: 22px; }
+}
+@media (max-width: 400px) {
+  .card-grid { grid-template-columns: 1fr; }
+  .card-images { height: 170px; }
+}
+</style>
+</head>
+<body>
+
+<div class="container">
+
+<!-- Header -->
+<header class="header">
+  <h1>13款热门车型对比</h1>
+  <div class="subtitle">
+    <span>插混 · 纯电 · 燃油</span>
+    <span>|</span>
+    <span>数据综合自各品牌官方及汽车媒体公开信息</span>
+    <span>|</span>
+    <span>更新于 2026年7月</span>
+  </div>
+</header>
+
+<!-- Stats -->
+<div class="stats-bar">
+  <span class="stat-item">共 <strong>13</strong> 款车型</span>
+  <span class="stat-item">插混 <strong>5</strong> 款</span>
+  <span class="stat-item">纯电 <strong>3</strong> 款</span>
+  <span class="stat-item">燃油 <strong>5</strong> 款</span>
+  <span class="stat-item">价格区间 <strong>10-20万</strong></span>
+</div>
+
+<!-- Filter -->
+<div class="filter-bar" id="filterBar">
+  <button class="filter-btn active" data-filter="all">全部 (13)</button>
+  <button class="filter-btn" data-filter="phev">🔌 插混 (5)</button>
+  <button class="filter-btn" data-filter="ev">⚡ 纯电 (3)</button>
+  <button class="filter-btn" data-filter="ice">⛽ 燃油 (5)</button>
+  <button class="filter-btn" data-filter="sedan">🚗 轿车 (9)</button>
+  <button class="filter-btn" data-filter="suv">🚙 SUV (3)</button>
+  <button class="filter-btn" data-filter="wagon">🚐 旅行/掀背 (2)</button>
+</div>
+
+<!-- Cards -->
+<div class="section-title">车型总览</div>
+<div class="card-grid" id="cardGrid"></div>
+
+<!-- Comparison Table -->
+<div class="table-section" id="table">
+  <h2>详细参数横向对比</h2>
+  <p class="table-note">← 左右滑动查看更多车型 →</p>
+  <div class="table-wrap" id="comparisonTable"></div>
+</div>
+
+<footer class="footer">
+  <p>数据来源：各品牌官方网站、工信部新车申报目录、汽车之家/易车/太平洋汽车等媒体公开信息</p>
+  <p>价格以各品牌官方指导价及限时优惠价为准，具体落地价因地区/经销商/保险方案不同而异</p>
+  <p>仅供参考选车使用，不构成购买建议</p>
+</footer>
+
+</div>
+
+<script>
+// ========== CAR DATA ==========
+// 图片: 搜索 "<车型名> 工信部申报图" 获取标准证件照
+// 将图片URL填入 imgExterior / imgInterior 字段即可
+// 留空时显示占位色块
+const cars = [
+  {
+    id: "lynk10",
+    name: "领克10 EM-P",
+    trim: "240 四驱 Ultra",
+    type: "phev",
+    body: "sedan",
+    bodyLabel: "轿车",
+    dtLabel: "eAWD 四驱",
+    imgExterior: "",
+    imgInterior: "",
+    color1: "#1e3a5f", color2: "#2d5a87",
+    price: "17.0-20.5万",
+    priceNote: "落地价 · 120版≈17万 / 240版≈20万",
+    length: 5050, width: 1966, height: 1487,
+    wheelbase: 3005,
+    drivetrain: "eAWD 智电四驱（全系标配）",
+    power: "390kW / 755N·m (系统综合)",
+    accel: "5.1s",
+    battery: "38.2kWh 磷酸铁锂",
+    evRange: "240km",
+    totalRange: "1400km",
+    fuelConsumption: "4.2L/100km (亏电)",
+    suspension: "双叉臂前悬 + 五连杆后悬",
+    smart: "激光雷达(全系)+Thor芯片+8295座舱",
+    pros: [
+      "全系标配激光雷达+高阶智驾(H7)",
+      "全系eAWD四驱，5.1秒破百",
+      "240km纯电续航同级最长之一",
+      "双叉臂前悬+五连杆，操控上限高",
+      "骁龙8295+魅族Flyme Auto 2.0",
+      "综合续航1400km，无里程焦虑"
+    ],
+    cons: [
+      "起售价较高(16.38万起)",
+      "作为全新车型，市场检验不足",
+      "溜背造型影响后排头部空间",
+      "品牌售后网点不如传统品牌密集"
+    ]
+  },
+  {
+    id: "lynk07",
+    name: "领克07 EM-P",
+    trim: "126 长续航 Ultra",
+    type: "phev",
+    body: "sedan",
+    bodyLabel: "轿车",
+    dtLabel: "前驱",
+    imgExterior: "",
+    imgInterior: "",
+    color1: "#4a1e5f", color2: "#7a3d9e",
+    price: "15.0-16.5万",
+    priceNote: "落地价 · Ultra版≈15.5万 / 入门≈14.5万",
+    length: 4835, width: 1900, height: 1480,
+    wheelbase: 2843,
+    drivetrain: "前置前驱",
+    power: "300kW / 615N·m (系统综合)",
+    accel: "6.5s",
+    battery: "18.4kWh 磷酸铁锂(宁德时代)",
+    evRange: "126km",
+    totalRange: "1450km",
+    fuelConsumption: "3.72L/100km (亏电)",
+    suspension: "前麦弗逊+后多连杆，全系液压可变阻尼",
+    smart: "激光雷达(全系)+8295芯片+Flyme Auto 2",
+    pros: [
+      "全系标配激光雷达+高阶智驾",
+      "408马力/615N·m，动力充沛",
+      "综合续航1450km，亏电油耗仅3.72L",
+      "全系液压可变阻尼悬架，舒适操控兼顾",
+      "骁龙8295车机+魅族系统流畅",
+      "限时13.98万起，性价比突出"
+    ],
+    cons: [
+      "仅前驱，无四驱可选",
+      "18.4kWh电池偏小，纯电续航有限",
+      "后备箱450L，空间一般",
+      "高配才有Thor芯片，低配算力一般",
+      "后排舒适配置偏少"
+    ]
+  },
+  {
+    id: "fangchengbaotai3",
+    name: "方程豹 钛3",
+    trim: "501KM 四驱 Ultra版",
+    type: "ev",
+    body: "suv",
+    bodyLabel: "SUV",
+    dtLabel: "后驱/四驱",
+    imgExterior: "",
+    imgInterior: "",
+    color1: "#1f4a2e", color2: "#3a7d4e",
+    price: "14.0-16.8万",
+    priceNote: "落地价 · 后驱≈14万 / 四驱≈16万",
+    length: 4605, width: 1900, height: 1720,
+    wheelbase: 2745,
+    drivetrain: "后驱 / 双电机四驱",
+    power: "160kW(后驱) / 310kW(四驱)",
+    accel: "4.9s(四驱) / 7.9s(后驱)",
+    battery: "65-73kWh / 2026款78.7kWh 磷酸铁锂",
+    evRange: "501km / 2026款620km",
+    totalRange: "—",
+    fuelConsumption: "—",
+    suspension: "前麦弗逊+后多连杆，Ultra版云辇-C",
+    smart: "天神之眼C + 29传感器 + 可选大疆无人机",
+    pros: [
+      "全系标配高阶智驾(天神之眼C)",
+      "四驱版4.9秒破百，性能出色",
+      "机甲硬派外观，个性十足",
+      "云辇-C智能悬架+帝瓦雷音响(高配)",
+      "可选大疆车载无人机，独一份",
+      "13.38万起，纯电SUV入门门槛低"
+    ],
+    cons: [
+      "2025款续航501km偏短",
+      "品牌知名度低，二手折价大",
+      "紧凑型SUV，后排空间一般",
+      "400V平台，充电速度中规中矩"
+    ]
+  },
+  {
+    id: "xpengL03",
+    name: "小鹏 MONA L03",
+    trim: "纯电625 Max / 增程1330 Max",
+    type: "ev",
+    body: "suv",
+    bodyLabel: "SUV",
+    dtLabel: "前驱",
+    imgExterior: "",
+    imgInterior: "",
+    color1: "#1a3a4a", color2: "#2e7d8a",
+    price: "15.0-17.0万(预估)",
+    priceNote: "落地价 · 新车刚上市暂无成交数据",
+    length: 4672, width: 1920, height: 1600,
+    wheelbase: 2850,
+    drivetrain: "前置前驱",
+    power: "183kW (纯电)",
+    accel: "6.6s",
+    battery: "磷酸铁锂(中创新航) 400V",
+    evRange: "525-625km(纯电) / 315km(增程纯电)",
+    totalRange: "1330km (增程综合)",
+    fuelConsumption: "11.9kWh/100km",
+    suspension: "前麦弗逊 + 后多连杆",
+    smart: "VLA 2.0纯视觉智驾 + 双图灵芯片(1500TOPS)",
+    pros: [
+      "15万级最强智驾(双图灵1500TOPS)",
+      "法拉利设计师操刀外观",
+      "增程版纯电315km同级最长",
+      "前备厢102L+后备厢539L",
+      "26.8英寸W-HUD+20扬声器",
+      "2026年7月上市，最新技术"
+    ],
+    cons: [
+      "全新车型，刚刚上市尚无口碑",
+      "纯视觉智驾(无激光雷达)",
+      "MONA品牌定位偏低端",
+      "400V平台，非800V快充",
+      "保值率完全未知"
+    ]
+  },
+  {
+    id: "bydSeaLion05",
+    name: "比亚迪 海狮05 DM-i",
+    trim: "115KM 旗舰型",
+    type: "phev",
+    body: "suv",
+    bodyLabel: "SUV",
+    dtLabel: "前驱",
+    imgExterior: "",
+    imgInterior: "",
+    color1: "#0c4a6e", color2: "#0284c7",
+    price: "10.2-13.2万",
+    priceNote: "落地价 · 75km≈10万 / 115km旗舰≈13万",
+    length: 4726, width: 1880, height: 1720,
+    wheelbase: 2712,
+    drivetrain: "前置前驱",
+    power: "电机120kW/210N·m + 发动机74kW",
+    accel: "8.3-8.5s",
+    battery: "12.9kWh(75km) / 18.3kWh(115km)",
+    evRange: "75km / 115km",
+    totalRange: "1400km",
+    fuelConsumption: "1.14-1.86L/100km (WLTC综合)",
+    suspension: "前麦弗逊 + 后多连杆独立",
+    smart: "DiPilot 100(L2+) + 29传感器 + 可选智驾版",
+    pros: [
+      "10万出头入手插混SUV，性价比极高",
+      "综合续航1400km，亏电油耗极低",
+      "全系标配360°全景影像+全速巡航",
+      "后多连杆独立悬架，底盘扎实",
+      "首任车主三电终身质保"
+    ],
+    cons: [
+      "1.5L自吸101马力动力偏弱",
+      "75km版不支持快充",
+      "115km版快充仅18kW",
+      "全系无四驱、无座椅加热通风",
+      "内饰用料不如王朝系列"
+    ]
+  },
+  {
+    id: "bydSeal06GT",
+    name: "比亚迪 海豹06 GT",
+    trim: "505海浪Plus / 550四驱热浪",
+    type: "ev",
+    body: "hatchback",
+    bodyLabel: "掀背车",
+    dtLabel: "后驱/四驱",
+    imgExterior: "",
+    imgInterior: "",
+    color1: "#7c2d12", color2: "#c2410c",
+    price: "11.5-15.0万",
+    priceNote: "落地价 · 505后驱≈12万 / 550四驱≈16万",
+    length: 4630, width: 1880, height: 1490,
+    wheelbase: 2820,
+    drivetrain: "后置后驱 / 双电机四驱",
+    power: "160kW(后驱) / 310kW(四驱)",
+    accel: "7.5s(后驱) / 4.9s(四驱)",
+    battery: "59.5kWh(后驱) / 73kWh(四驱) 磷酸铁锂",
+    evRange: "505km(后驱) / 550km(四驱)",
+    totalRange: "—",
+    fuelConsumption: "约13kWh/100km",
+    suspension: "前麦弗逊+后五连杆，四驱版可调悬架",
+    smart: "天神之眼 DiPilot 100 + 29传感器",
+    pros: [
+      "后驱/四驱可选，驾驶乐趣好",
+      "四驱版4.9秒破百+800V快充",
+      "后五连杆悬架，操控基础好",
+      "两厢造型后备厢1058L超大",
+      "四驱版丹拿12扬声器音响"
+    ],
+    cons: [
+      "后驱版400V平台充电一般",
+      "后排空间不如同级三厢车",
+      "两厢造型受众面较窄",
+      "高配18.68万价格偏高"
+    ]
+  },
+  {
+    id: "bydSeal06Wagon",
+    name: "比亚迪 海豹06 旅行版",
+    trim: "DM-i 150KM 旗舰型",
+    type: "phev",
+    body: "wagon",
+    bodyLabel: "旅行车",
+    dtLabel: "前驱",
+    imgExterior: "",
+    imgInterior: "",
+    color1: "#064e3b", color2: "#059669",
+    price: "11.5-13.5万",
+    priceNote: "落地价 · 80km≈11.5万 / 150km旗舰≈13万",
+    length: 4850, width: 1890, height: 1505,
+    wheelbase: 2790,
+    drivetrain: "前置前驱",
+    power: "120kW(80km版) / 160kW(150km版)",
+    accel: "7.7s (150km版)",
+    battery: "10.1kWh(80km) / 18.7kWh(150km)",
+    evRange: "80km / 150km",
+    totalRange: "2000km",
+    fuelConsumption: "3.15L/100km (NEDC亏电)",
+    suspension: "前麦弗逊+后四连杆，顶配云辇-C",
+    smart: "天神之眼C(全系)+Orin-N 84TOPS+DiLink 100",
+    pros: [
+      "国内首款平价插混旅行车(10.98万起)",
+      "综合续航2000km，同级最长",
+      "后备厢670-1535L，空间极大",
+      "全系标配高阶智驾+车载冰箱",
+      "顶配云辇-C智能悬架",
+      "掀背尾门+车顶行李架，实用性强"
+    ],
+    cons: [
+      "1.5L自吸动力偏弱",
+      "仅前驱，无四驱版",
+      "旅行车在国内市场受众小",
+      "低配80km纯电续航偏短",
+      "品牌定位低于王朝系列"
+    ]
+  },
+  {
+    id: "geelyXingyao8",
+    name: "吉利银河 星耀8",
+    trim: "EM-P 130km 版",
+    type: "phev",
+    body: "sedan",
+    bodyLabel: "轿车",
+    dtLabel: "前驱",
+    imgExterior: "",
+    imgInterior: "",
+    color1: "#1e293b", color2: "#475569",
+    price: "12.6-15.6万",
+    priceNote: "落地价 · EM-i尊享≈12.6万 / EM-P≈15万",
+    length: 5018, width: 1918, height: 1480,
+    wheelbase: 2928,
+    drivetrain: "前置前驱",
+    power: "175kW(EM-i) / 160kW+1.5T(EM-P)",
+    accel: "6.49s(EM-P) / 7.9-8.4s(EM-i)",
+    battery: "8.5kWh(60km) / 18.4kWh(130km)",
+    evRange: "60km / 130km",
+    totalRange: "1500-1600km",
+    fuelConsumption: "3.36L/100km (WLTC亏电)",
+    suspension: "前麦弗逊+后五连杆，全系FSD可变阻尼",
+    smart: "千里浩瀚智驾+龍鹰一号+Flyme Auto+DeepSeek AI",
+    pros: [
+      "5米车长+2928mm轴距，越级空间",
+      "12.58万起，中大型轿车低价入市",
+      "全系FSD可变阻尼悬架",
+      "23扬声器2000W音响(高配)",
+      "后排VIP电动行政座椅(加热通风按摩)",
+      "EM-P版6.49秒破百"
+    ],
+    cons: [
+      "EM-i版1.5L自吸动力偏弱",
+      "全系前驱，无四驱",
+      "入门60km纯电续航偏短",
+      "龍鹰一号芯片不如8295",
+      "品牌影响力不如比亚迪"
+    ]
+  },
+  {
+    id: "geelyGalaxyE8",
+    name: "吉利银河 E8",
+    trim: "700km 远航智驾版",
+    type: "ev",
+    body: "sedan",
+    bodyLabel: "轿车",
+    dtLabel: "后驱/四驱",
+    imgExterior: "",
+    imgInterior: "",
+    color1: "#0f172a", color2: "#334155",
+    price: "14.8-19.8万",
+    priceNote: "落地价 · 575km≈14.8万 / 700km≈17.7万",
+    length: 5010, width: 1920, height: 1465,
+    wheelbase: 2925,
+    drivetrain: "后置后驱 / 双电机四驱",
+    power: "250kW(后驱) / 475kW(四驱)",
+    accel: "5.49s(后驱) / 3.49s(四驱)",
+    battery: "62kWh(575km) / 76kWh(700km) / 75kWh(四驱)",
+    evRange: "575/610/700km / 620km(四驱)",
+    totalRange: "—",
+    fuelConsumption: "—",
+    suspension: "前麦弗逊 + 后多连杆",
+    smart: "45英寸8K大屏+8295+千里浩瀚H1+激光雷达(高配)",
+    pros: [
+      "45英寸8K贯穿大屏，座舱震撼",
+      "四驱版3.49秒破百+5.5C超充",
+      "0.199Cd超低风阻",
+      "14.98万起，中大型纯电价格洼地",
+      "骁龙8295+Flyme Auto，车机优秀",
+      "700km长续航版性价比高"
+    ],
+    cons: [
+      "前麦弗逊悬架(非双叉臂)",
+      "入门版无热泵空调",
+      "后排坐垫偏短，腿部支撑不足",
+      "仅单层玻璃，高速风噪偏大",
+      "顶配以外无激光雷达"
+    ]
+  },
+  {
+    id: "hongqiH5",
+    name: "红旗 H5",
+    trim: "2.0T 旗畅版",
+    type: "ice",
+    body: "sedan",
+    bodyLabel: "轿车",
+    dtLabel: "前驱",
+    imgExterior: "",
+    imgInterior: "",
+    color1: "#450a0a", color2: "#991b1b",
+    price: "12.0-15.0万",
+    priceNote: "落地价 · 1.5T≈12万 / 2.0T旗畅≈14万(含税)",
+    length: 4988, width: 1875, height: 1470,
+    wheelbase: 2920,
+    drivetrain: "前置前驱",
+    power: "224Ps / 340N·m (2.0T)",
+    accel: "7.8s (2.0T)",
+    battery: "— (HEV版1.5kWh)",
+    evRange: "—",
+    totalRange: "— (油箱58L)",
+    fuelConsumption: "6.4L(WLTC官标) / 实际8-9L",
+    suspension: "前麦弗逊 + 后多连杆",
+    smart: "12.6英寸中控+L2驾驶辅助+9安全气囊",
+    pros: [
+      "外观霸气，近5米车长气场越级",
+      "2920mm轴距，后排空间宽裕",
+      "终端优惠4万+，14-16万落地2.0T+8AT",
+      "首任车主终身质保+4年免费保养",
+      "68.1%高强度钢+9气囊，安全到位",
+      "国产豪华品牌有面子"
+    ],
+    cons: [
+      "实际油耗偏高(8-9L/100km)",
+      "1.5T双离合低速顿挫",
+      "底盘偏软，过弯支撑一般",
+      "车机响应偏慢，偶有卡顿",
+      "高速风噪偏大",
+      "保值率偏低(3年约60%)"
+    ]
+  },
+  {
+    id: "hongqiH6",
+    name: "红旗 H6",
+    trim: "2.0T 致尚版（高功率）",
+    type: "ice",
+    body: "sedan",
+    bodyLabel: "轿车",
+    dtLabel: "前驱",
+    imgExterior: "",
+    imgInterior: "",
+    color1: "#3b0764", color2: "#7c3aed",
+    price: "15.0-18.5万",
+    priceNote: "落地价 · 优惠5万+税险 / 致远≈17万",
+    length: 4990, width: 1880, height: 1455,
+    wheelbase: 2920,
+    drivetrain: "前置前驱",
+    power: "252Ps / 380N·m (高功率2.0T)",
+    accel: "6.8s (高功率)",
+    battery: "—",
+    evRange: "—",
+    totalRange: "—",
+    fuelConsumption: "约6.5-7L(WLTC) / 实际8-10L",
+    suspension: "前麦弗逊+后多连杆，高配CDC可变阻尼",
+    smart: "12.3英寸仪表+12.6英寸中控+AR-HUD+L2",
+    pros: [
+      "溜背轿跑+中置双出排气，颜值高",
+      "高功率252马力/6.8秒破百",
+      "近5米车长+2920mm轴距",
+      "高配布雷博四活塞刹车+CDC悬架",
+      "比CC/CT4便宜4万+"
+    ],
+    cons: [
+      "优惠幅度小，终端价格硬",
+      "油耗偏高(实际8-10L)",
+      "车机生态单薄(~30个APP)",
+      "主动刹车偏保守，易误触发",
+      "溜背影响后备箱实用性"
+    ]
+  },
+  {
+    id: "lynk03",
+    name: "领克 03",
+    trim: "2.0T 劲Halo",
+    type: "ice",
+    body: "sedan",
+    bodyLabel: "轿车",
+    dtLabel: "前驱",
+    imgExterior: "",
+    imgInterior: "",
+    color1: "#1e3a5f", color2: "#3b82f6",
+    price: "11.5-15.0万",
+    priceNote: "落地价 · 1.5T≈11.5万 / 2.0T≈14.5万(含税)",
+    length: 4700, width: 1843, height: 1460,
+    wheelbase: 2730,
+    drivetrain: "前置前驱（03+有四驱）",
+    power: "272Ps / 400N·m (2.0T T5 Evo)",
+    accel: "6.5s (2.0T) / 4.89s (03+ Racing)",
+    battery: "—",
+    evRange: "—",
+    totalRange: "—",
+    fuelConsumption: "约6.5-7.5L/100km(WLTC)",
+    suspension: "前麦弗逊+后多连杆，运动化调校",
+    smart: "15.4英寸中控+AR-HUD+千里浩瀚H3+NOA",
+    pros: [
+      "2.0T 272马力同级最强燃油动力",
+      "限时10.38万起，性价比炸裂",
+      "爱信8AT平顺可靠(2.0T版)",
+      "AR-HUD+龍鹰一号车机+NOA智驾",
+      "03+系列最高350马力/4.89秒",
+      "猎风前脸设计辨识度高"
+    ],
+    cons: [
+      "运动化底盘偏硬，舒适性一般",
+      "轴距2730mm，后排空间中等",
+      "2.0T油耗偏高",
+      "保值率不如思域/速腾",
+      "品牌影响力有限"
+    ]
+  },
+  {
+    id: "mg7",
+    name: "MG 7",
+    trim: "2.0T 奢享版",
+    type: "ice",
+    body: "sedan",
+    bodyLabel: "轿车",
+    dtLabel: "前驱",
+    imgExterior: "",
+    imgInterior: "",
+    color1: "#4a1e0a", color2: "#d97706",
+    price: "12.0-15.5万",
+    priceNote: "落地价 · 1.5T≈12万 / 2.0T尊享≈14万(含税)",
+    length: 4884, width: 1889, height: 1447,
+    wheelbase: 2778,
+    drivetrain: "前置前驱",
+    power: "261Ps / 405N·m (2.0T)",
+    accel: "6.5s (2.0T)",
+    battery: "—",
+    evRange: "—",
+    totalRange: "—",
+    fuelConsumption: "6.94L/100km(2.0T WLTC) / 实际8-10L",
+    suspension: "前麦弗逊+后多连杆，高配mCDC+E-LSD",
+    smart: "8155芯片+NGP智驾+AR-HUD+BOSE 14扬声器",
+    pros: [
+      "无框车门+电动尾翼+溜背，颜值拉满",
+      "2.0T 261马力+9AT+6.5秒破百",
+      "限时11.29万起，A级价买B级轿跑",
+      "mCDC电控悬架+E-LSD差速器(高配)",
+      "终身免费保养+动力总成质保",
+      "燃油车里NGP智驾领先"
+    ],
+    cons: [
+      "溜背造型后排头部空间受限",
+      "2.0T市区油耗8-10L偏高",
+      "品牌力弱，二手保值率低",
+      "月销不足2000辆，保有量小",
+      "入门版无8155+电动尾翼"
+    ]
+  }
+];
+
+// ========== RENDER ==========
+const grid = document.getElementById('cardGrid');
+
+function getTypeBadge(type) {
+  const map = {
+    phev: ['插混', 'type-phev'],
+    ev: ['纯电', 'type-ev'],
+    ice: ['燃油', 'type-ice'],
+    hev: ['混动', 'type-hev']
+  };
+  const [label, cls] = map[type] || ['其他', ''];
+  return `<span class="type-badge ${cls}">${label}</span>`;
+}
+
+function renderCards(filter = 'all') {
+  const filtered = cars.filter(c => {
+    if (filter === 'all') return true;
+    if (['phev', 'ev', 'ice', 'hev'].includes(filter)) return c.type === filter;
+    if (filter === 'sedan') return c.body === 'sedan';
+    if (filter === 'suv') return c.body === 'suv';
+    if (filter === 'wagon') return c.body === 'wagon' || c.body === 'hatchback';
+    return true;
+  });
+
+  if (filtered.length === 0) {
+    grid.innerHTML = '<div class="no-results"><div class="icon">🔍</div><p>没有匹配的车型，换一个筛选条件试试</p></div>';
+    return;
+  }
+
+  grid.innerHTML = filtered.map((c, i) => {
+    const idBase = c.id + '-' + i;
+    const extImg = c.imgExterior
+      ? `<img src="${c.imgExterior}" alt="${c.name} 外观" loading="lazy" onerror="this.style.display='none'">`
+      : '';
+    const intImg = c.imgInterior
+      ? `<img src="${c.imgInterior}" alt="${c.name} 内饰" loading="lazy" onerror="this.style.display='none'">`
+      : '';
+    return `
+    <div class="card">
+      <div class="card-images">
+        <div class="card-img" style="background:linear-gradient(135deg, ${c.color1}, ${c.color2});">
+          <span class="img-label">外观</span>
+          ${extImg}
+          <div class="img-overlay">
+            <div style="font-size:40px;margin-bottom:2px;opacity:.6;">🚗</div>
+            ${c.name} 外观
+          </div>
+        </div>
+        <div class="card-img interior" style="background:linear-gradient(135deg, #3d2b1f, #6b5035);">
+          <span class="img-label">内饰</span>
+          ${intImg}
+          <div class="img-overlay">
+            <div style="font-size:40px;margin-bottom:2px;opacity:.6;">🛋️</div>
+            ${c.name} 内饰
+          </div>
+        </div>
+      </div>
+      <div class="card-body">
+        <div class="card-meta">
+          ${getTypeBadge(c.type)}
+          <span class="body-badge">${c.bodyLabel} · ${c.dtLabel}</span>
+        </div>
+        <div class="card-title">${c.name}</div>
+        <div class="card-subtitle">${c.trim}</div>
+
+        <div class="price-row">
+          <span class="price-tag"><span class="unit">¥</span>${c.price}</span>
+          <span class="price-note">${c.priceNote}</span>
+        </div>
+
+        <div class="spec-row">
+          <span class="spec-badge">📐 <strong>${c.length}×${c.width}×${c.height}</strong></span>
+          <span class="spec-badge">轴距 <strong>${c.wheelbase}mm</strong></span>
+          ${c.evRange !== '—' ? `<span class="spec-badge">🔋 纯电 <strong>${c.evRange}</strong></span>` : ''}
+          ${c.totalRange !== '—' ? `<span class="spec-badge">🛣 综合 <strong>${c.totalRange}</strong></span>` : ''}
+          <span class="spec-badge">⚡ 加速 <strong>${c.accel}</strong></span>
+          <span class="spec-badge">🔧 <strong>${c.drivetrain}</strong></span>
+        </div>
+
+        <div class="toggle-section">
+          <div class="toggle-header">
+            <div class="toggle-tab tab-pro" onclick="togglePC(this, 'pro-${idBase}')">✅ 优点 (${c.pros.length})</div>
+            <div class="toggle-tab tab-inactive" onclick="togglePC(this, 'con-${idBase}')">⚠️ 不足 (${c.cons.length})</div>
+          </div>
+          <div class="toggle-content show" id="pro-${idBase}">
+            <ul>${c.pros.map(p => `<li>${p}</li>`).join('')}</ul>
+          </div>
+          <div class="toggle-content" id="con-${idBase}">
+            <ul>${c.cons.map(p => `<li>${p}</li>`).join('')}</ul>
+          </div>
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+window.togglePC = function(btn, targetId) {
+  const parent = btn.parentElement.parentElement;
+  parent.querySelectorAll('.toggle-tab').forEach(t => { t.className = 'toggle-tab tab-inactive'; });
+  parent.querySelectorAll('.toggle-content').forEach(c => { c.classList.remove('show'); });
+
+  const isPro = targetId.startsWith('pro-');
+  btn.className = 'toggle-tab ' + (isPro ? 'tab-pro' : 'tab-con');
+  document.getElementById(targetId).classList.add('show');
+};
+
+// ========== COMPARISON TABLE ==========
+function renderTable() {
+  const cols = [
+    { key: 'name', label: '车型', render: (c) => `<span class="car-col-header">${c.name}</span><span class="car-col-trim">${c.trim}</span>` },
+    { key: 'type', label: '动力', render: (c) => getTypeBadge(c.type) },
+    { key: 'body', label: '车身', render: (c) => c.bodyLabel },
+    { key: 'price', label: '指导/优惠价', render: (c) => `<span class="car-col-price">${c.price}</span>` },
+    { key: 'size', label: '长×宽×高(mm)', render: (c) => `${c.length}×${c.width}×${c.height}` },
+    { key: 'wheelbase', label: '轴距(mm)', render: (c) => c.wheelbase },
+    { key: 'drivetrain', label: '驱动方式', render: (c) => c.drivetrain },
+    { key: 'power', label: '动力参数', render: (c) => c.power },
+    { key: 'accel', label: '0-100加速', render: (c) => c.accel },
+    { key: 'evRange', label: '纯电续航', render: (c) => c.evRange },
+    { key: 'totalRange', label: '综合续航', render: (c) => c.totalRange },
+    { key: 'fuel', label: '油耗/电耗', render: (c) => c.fuelConsumption },
+    { key: 'suspension', label: '悬架系统', render: (c) => c.suspension },
+    { key: 'smart', label: '智能亮点', render: (c) => c.smart },
+  ];
+
+  const thead = `<thead><tr><th>参数项</th>${cars.map(c => `<th><span class="car-col-header">${c.name}</span></th>`).join('')}</tr></thead>`;
+  const tbody = `<tbody>${cols.map(col =>
+    `<tr><td>${col.label}</td>${cars.map(c => `<td>${col.render(c)}</td>`).join('')}</tr>`
+  ).join('')}</tbody>`;
+
+  document.getElementById('comparisonTable').innerHTML = `<table>${thead}${tbody}</table>`;
+}
+
+// ========== FILTER ==========
+document.querySelectorAll('.filter-btn').forEach(btn => {
+  btn.addEventListener('click', function() {
+    document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+    this.classList.add('active');
+    renderCards(this.dataset.filter);
+  });
+});
+
+// ========== INIT ==========
+renderCards();
+renderTable();
+</script>
+
+</body>
+</html>
